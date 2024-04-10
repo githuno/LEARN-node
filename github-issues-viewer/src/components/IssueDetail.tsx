@@ -4,6 +4,8 @@ import { GET_ISSUE_DETAILS } from '../queries';
 
 interface Props {
   issueId: string;
+  repositoryName: string;
+  owner: string;
 }
 
 interface IssueDetails {
@@ -15,7 +17,7 @@ interface IssueDetails {
   };
 }
 
-const IssueDetail: React.FC<Props> = ({ issueId }) => {
+const IssueDetail: React.FC<Props> = ({ issueId, repositoryName, owner }) => {
   const { data, loading, error } = useQuery<{ node: IssueDetails }>(GET_ISSUE_DETAILS, {
     variables: { id: issueId },
   });
@@ -25,7 +27,7 @@ const IssueDetail: React.FC<Props> = ({ issueId }) => {
 
   return (
     <div>
-      <h2>{data?.node.title}</h2>
+      <h3>{data?.node.title} on {owner}/{repositoryName} Issues</h3>
       <p>Created at: {data?.node.createdAt}</p>
       <p>Author: {data?.node.author.login}</p>
       <p>{data?.node.body}</p>

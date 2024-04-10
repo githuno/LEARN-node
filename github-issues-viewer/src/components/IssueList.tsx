@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_REPOSITORY_ISSUES } from '../queries';
 import IssueDetail from './IssueDetail';
@@ -19,28 +19,39 @@ const IssueList: React.FC<Props> = ({ repositoryName, owner }) => {
     variables: { name: repositoryName, owner: owner },
   });
 
+  const handleBackClick = useCallback(() => {
+    setSelectedIssueId(null);
+  }, []);
+
+  const handleIssueClick = useCallback((id: string) => {
+    setSelectedIssueId(id);
+  }, []);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   if (selectedIssueId) {
     return (
       <div>
-        <button onClick={() => setSelectedIssueId(null)}>Back to Issues List</button>
-        <IssueDetail issueId={selectedIssueId} />
+        <button onClick={handleBackClick}>Back to Issues List</button>
+		<IssueDetail issueId={selectedIssueId} repositoryName={repositoryName} owner={owner} />
       </div>
     );
   }
 
   return (
-	<ul>
-	  {data?.repository.issues.edges.map(({ node }) => (
-		<li key={node.id}>
-		  <button onClick={() => setSelectedIssueId(node.id)} style={{background: 'none', border: 'none', padding: 0, color: '#069', textDecoration: 'underline', cursor: 'pointer'}}>
-			{node.title}
-		  </button>
-		</li>
-	  ))}
-	</ul>
+    <div>
+      <h3>Latest Issues on {owner}/{repositoryName}</h3>
+      <ul>
+        {data?.repository.issues.edges.map(({ node }) => (
+          <li key={node.id}>
+            <button onClick={() => handleIssueClick(node.id)}>
+              {node.title}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };
 
