@@ -1,4 +1,3 @@
-import React from 'react';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './apolloClient';
 import { SearchRepositories } from './components/SearchRepositories';
