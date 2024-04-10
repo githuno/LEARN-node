@@ -1,5 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+// https://www.apollographql.com/docs/react/get-started/#step-4-connect-your-client-to-react
 
 const httpLink = createHttpLink({
   uri: 'https://api.github.com/graphql',
